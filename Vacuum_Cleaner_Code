@@ -1,0 +1,43 @@
+# Vacuum Cleaner Agent
+
+# Step 1: Read input
+vacuum_position = input("Enter vacuum position (L/R): ").upper()
+left_status = input("Enter left room status (Dirty/Clean): ").capitalize()
+right_status = input("Enter right room status (Dirty/Clean): ").capitalize()
+
+print("\nInitial State:")
+print("Vacuum Position:", vacuum_position)
+print("Left Room:", left_status)
+print("Right Room:", right_status)
+
+# Step 2: Perform actions until both rooms are clean
+while left_status == "Dirty" or right_status == "Dirty":
+
+    if vacuum_position == "L":
+
+        if left_status == "Dirty":
+            print("\nAction: SUCK")
+            left_status = "Clean"
+            print("Left room is now Clean")
+
+        else:
+            print("\nAction: RIGHT")
+            vacuum_position = "R"
+            print("Vacuum moved to Right")
+
+    elif vacuum_position == "R":
+
+        if right_status == "Dirty":
+            print("\nAction: SUCK")
+            right_status = "Clean"
+            print("Right room is now Clean")
+
+        else:
+            print("\nAction: LEFT")
+            vacuum_position = "L"
+            print("Vacuum moved to Left")
+
+# Step 3: Goal reached
+print("\nAction: STOP")
+print("Goal reached!")
+print("Both rooms are clean.")
