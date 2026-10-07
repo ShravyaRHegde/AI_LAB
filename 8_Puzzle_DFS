@@ -1,0 +1,48 @@
+start = [1, 4, 2,
+         3, 7, 5,
+         0, 6, 8]          # 0 = blank
+
+goal  = [0, 1, 2,
+         3, 4, 5,
+         6, 7, 8]
+
+arrows = {"Up": "↑", "Down": "↓", "Left": "←", "Right": "→"}
+
+# find all possible next boards
+def next_states(state):
+    result = []
+    i = state.index(0)
+    row, col = i // 3, i % 3
+    moves = []
+    if row > 0: moves.append(("Up",    i - 3))
+    if row < 2: moves.append(("Down",  i + 3))
+    if col > 0: moves.append(("Left",  i - 1))
+    if col < 2: moves.append(("Right", i + 1))
+    for name, j in moves:
+        new = state[:]
+        new[i], new[j] = new[j], new[i]
+        result.append((name, new))
+    return result
+
+# DFS using a stack
+def dfs(start):
+    stack = [(start, [start], [])]     # (board, boards so far, moves so far)
+    visited = set()
+    visited.add(tuple(start))
+
+    while stack:
+        state, path, moves = stack.pop()     # take the LAST item (go deep)
+        if state == goal:
+            return path, moves
+        for name, nxt in reversed(next_states(state)):
+            if tuple(nxt) not in visited:
+                visited.add(tuple(nxt))
+                stack.append((nxt, path + [nxt], moves + [name]))
+    return None
+
+boards, moves = dfs(start)
+print("Moves needed:", len(moves))
+print("Moves:", " -> ".join(moves))
+print()
+for n, m in enumerate(moves, 1):
+    print(f"Move {n}: {m} {arrows[m]}")
