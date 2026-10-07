@@ -1,0 +1,84 @@
+# 8-Puzzle using Iterative Deepening Search (IDS)
+
+# ---------- Puzzle (0 = blank) ----------
+start = [1, 4, 2,
+         3, 7, 5,
+         0, 6, 8]
+
+# For your original puzzle, use this start instead (24 moves, slower):
+# start = [5, 4, 0,
+#          6, 1, 8,
+#          7, 3, 2]
+
+goal = [0, 1, 2,
+        3, 4, 5,
+        6, 7, 8]
+
+arrows = {"Up": "↑", "Down": "↓", "Left": "←", "Right": "→"}
+
+
+# ---------- Step 1: find all possible next boards ----------
+def next_states(state):
+    result = []
+    i = state.index(0)              # position of blank
+    row, col = i // 3, i % 3
+
+    moves = []
+    if row > 0: moves.append(("Up",    i - 3))
+    if row < 2: moves.append(("Down",  i + 3))
+    if col > 0: moves.append(("Left",  i - 1))
+    if col < 2: moves.append(("Right", i + 1))
+
+    for name, j in moves:
+        new = state[:]              # copy the board
+        new[i], new[j] = new[j], new[i]
+        result.append((name, new))
+    return result
+
+
+# ---------- Step 2: depth-limited search ----------
+def dls(state, limit, path, moves):
+    if state == goal:
+        return path, moves          # goal found
+    if limit == 0:
+        return None                 # cannot go deeper
+    for name, nxt in next_states(state):
+        if nxt not in path:         # avoid repeating a board
+            answer = dls(nxt, limit - 1, path + [nxt], moves + [name])
+            if answer is not None:
+                return answer
+    return None
+
+
+# ---------- Step 3: iterative deepening ----------
+def ids(start):
+    limit = 0
+    while True:
+        answer = dls(start, limit, [start], [])
+        if answer is not None:
+            return answer
+        limit += 1
+
+
+# ---------- Print a board ----------
+def show(board):
+    for r in range(0, 9, 3):
+        print(" ".join(str(x) if x != 0 else "_" for x in board[r:r+3]))
+    print()
+
+
+# ---------- Run ----------
+boards, moves = ids(start)
+
+print("Moves needed:", len(moves))
+print()
+
+print("Start:")
+show(boards[0])
+
+for n in range(len(moves)):
+    print(f"Move {n+1}: {moves[n]} {arrows[moves[n]]}")
+    show(boards[n + 1])
+
+print("Goal reached!")
+print("All moves:", " -> ".join(moves))
