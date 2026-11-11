@@ -1,0 +1,35 @@
+
+def unify(x, y, subs={}):
+    if x == y:
+        return subs
+
+    if isinstance(x, str) and x.islower():
+        subs[x] = y
+        return subs
+
+    if isinstance(y, str) and y.islower():
+        subs[y] = x
+        return subs
+
+    if isinstance(x, tuple) and isinstance(y, tuple):
+        if len(x) != len(y) or x[0] != y[0]:
+            return None
+        for a, b in zip(x[1:], y[1:]):
+            subs = unify(a, b, subs)
+            if subs is None:
+                return None
+        return subs
+
+    return None
+
+
+# Example
+term1 = ("P", "x", "a")
+term2 = ("P", "b", "a")
+
+result = unify(term1, term2)
+
+if result:
+    print("Unification successful:", result)
+else:
+    print("Unification failed")
