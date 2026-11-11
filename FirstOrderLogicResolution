@@ -1,0 +1,32 @@
+# First Order Logic Resolution
+
+def resolve(c1, c2):
+    for a in c1:
+        for b in c2:
+            if a[0] != b[0] and a[1] == b[1]:
+                if a[2] == b[2] or a[2].islower() or b[2].islower():
+                    return [x for x in c1 if x != a] + [x for x in c2 if x != b]
+    return None
+
+
+# Knowledge Base
+KB = [
+    [(False, "Human", "John")],
+    [(True, "Human", "John"), (False, "Mortal", "John")],
+    [(True, "Mortal", "John")]
+]
+
+# Resolution
+c1 = KB[0]
+c2 = KB[1]
+r1 = resolve(c1, c2)
+
+if r1 is not None:
+    print("Step 1:", r1)
+    r2 = resolve(r1, KB[2])
+    if r2 == []:
+        print("Step 2: {}")
+        print("Empty clause found")
+        print("Query is PROVED")
+else:
+    print("Query cannot be proved")
