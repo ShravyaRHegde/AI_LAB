@@ -1,0 +1,24 @@
+
+facts = {"Human(John)"}
+
+rules = {
+    "Human(John)": "Mortal(John)",
+    "Human(Mary)": "Mortal(Mary)"
+}
+
+while True:
+    new_fact = None
+
+    for condition, conclusion in rules.items():
+        if condition in facts and conclusion not in facts:
+            new_fact = conclusion
+            break
+
+    if new_fact is None:
+        break
+
+    facts.add(new_fact)
+
+print("Facts after Forward Chaining:")
+for fact in facts:
+    print(fact)
